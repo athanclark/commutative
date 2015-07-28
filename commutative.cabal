@@ -14,8 +14,9 @@ Library
   HS-Source-Dirs:       src
   GHC-Options:          -Wall
   Exposed-Modules:      Data.Commutative
-  Other-Modules:        Data.Commutative.Internal
+                        Data.Mergeable
   Build-Depends:        base >= 4.6 && < 5
+                      , random
 
 Test-Suite spec
   Type:                 exitcode-stdio-1.0
