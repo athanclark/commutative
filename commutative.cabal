@@ -17,6 +17,7 @@ Library
                         Data.Mergeable
   Build-Depends:        base >= 4.6 && < 5
                       , random
+                      , semigroups
 
 Test-Suite spec
   Type:                 exitcode-stdio-1.0

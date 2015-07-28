@@ -1,5 +1,10 @@
+{-# LANGUAGE
+    GeneralizedNewtypeDeriving
+  #-}
+
 module Data.Commutative where
 
+import Data.Monoid (Any (..), All (..), First (..), Last (..))
 import System.IO.Unsafe (unsafePerformIO)
 import System.Random (randomIO)
 
@@ -22,6 +27,28 @@ instance Commutative (CommEndo a) where
 
 instance CommutativeId (CommEndo a) where
   cempty = CommEndo id
+
+-- Booleans
+instance Commutative Any where
+  commute (Any x) (Any y) = Any $ x || y
+
+instance CommutativeId Any where
+  cempty = Any False
+
+instance Commutative All where
+  commute (All x) (All y) = All $ x && y
+
+instance CommutativeId All where
+  cempty = All True
+
+-- Maybe
+newtype OneOf a = OneOf {getOneOf :: Maybe a}
+  deriving (Show, Eq)
+
+instance Commutative (OneOf a) where
+  commute (OneOf x) (OneOf y) = OneOf $ pick1 (getFirst $ First x `mappend` First y)
+                                              (getLast  $ Last x  `mappend` Last y)
+
 
 pick1 :: a -> a -> a
 pick1 l r = let leftOrRight = unsafePerformIO randomIO
