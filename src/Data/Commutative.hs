@@ -10,7 +10,10 @@ import System.Random (randomIO)
 
 
 class Commutative a where
-  commute :: a -> a -> a -- ^ Abelian binary operation - @x `commute` y == y `commute` x@
+  commute :: a -> a -> a -- ^ Abelian magma - @x `commute` y == y `commute` x@.
+                         -- Note that the commutative behaviour should be embedded in the
+                         -- instance. For distinguished commutes, more information is needed - like
+                         -- a predicate as is the case for @commuteVia@ and @commuteViaM@.
 
 (<~>) :: Commutative a => a -> a -> a
 (<~>) = commute
@@ -18,8 +21,17 @@ class Commutative a where
 class Commutative a => CommutativeId a where
   cempty :: a -- ^ Identity element - @x `commute` cempty == cempty `commute` x == x@
 
+-- | @flip@ when @False@ - simple & pure "predicative" commute.
+commuteVia :: Bool -> (a -> a -> a) -> a -> a -> a
+commuteVia p f = if p then f else flip f
+
+-- | Lifted predicative behaviour.
+commuteViaF :: Functor f => f Bool -> (a -> a -> a) -> a -> a -> f a
+commuteViaF mb f x y = (\b -> if b then f x y else f y x) <$> mb
+
 
 -- | Endomorphisms commutative over composition.
+-- __Warning__: The @Commutative@ instance uses @unsafePerformIO@ to randomly pick the order.
 newtype CommEndo a = CommEndo {appCommEndo :: a -> a}
 
 instance Commutative (CommEndo a) where
@@ -42,6 +54,9 @@ instance CommutativeId All where
   cempty = All True
 
 -- Maybe
+
+-- | In the case of two @Just@ values, the commutative instance randomly chooses one of them.
+-- __Warning__: The @Commutative@ instance uses @unsafePerformIO@ to randomly pick the order.
 newtype OneOf a = OneOf {getOneOf :: Maybe a}
   deriving (Show, Eq)
 
