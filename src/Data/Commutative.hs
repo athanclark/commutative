@@ -4,7 +4,7 @@
 
 module Data.Commutative where
 
-import Data.Monoid (Any (..), All (..), First (..), Last (..))
+import Data.Monoid (Any (..), All (..), First (..), Last (..), Sum (..), Product (..))
 import System.IO.Unsafe (unsafePerformIO)
 import System.Random (randomIO)
 
@@ -29,6 +29,13 @@ commuteVia p f = if p then f else flip f
 commuteViaF :: Functor f => f Bool -> (a -> a -> a) -> a -> a -> f a
 commuteViaF mb f x y = (\b -> if b then f x y else f y x) <$> mb
 
+
+-- Unit
+instance Commutative () where
+  commute () () = ()
+
+instance CommutativeId () where
+  cempty = ()
 
 -- | Endomorphisms commutative over composition.
 -- __Warning__: The @Commutative@ instance uses @unsafePerformIO@ to randomly pick the order.
@@ -63,6 +70,19 @@ newtype OneOf a = OneOf {getOneOf :: Maybe a}
 instance Commutative (OneOf a) where
   commute (OneOf x) (OneOf y) = OneOf $ pick1 (getFirst $ First x `mappend` First y)
                                               (getLast  $ Last x  `mappend` Last y)
+
+-- Numbers
+instance Num a => Commutative (Sum a) where
+  commute (Sum x) (Sum y) = Sum $ x + y
+
+instance Num a => CommutativeId (Sum a) where
+  cempty = Sum 0
+
+instance Num a => Commutative (Product a) where
+  commute (Product x) (Product y) = Product $ x * y
+
+instance Num a => CommutativeId (Product a) where
+  cempty = Product 1
 
 
 pick1 :: a -> a -> a
