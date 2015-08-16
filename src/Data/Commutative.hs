@@ -71,6 +71,9 @@ instance Commutative (OneOf a) where
   commute (OneOf x) (OneOf y) = OneOf $ pick1 (getFirst $ First x `mappend` First y)
                                               (getLast  $ Last x  `mappend` Last y)
 
+instance CommutativeId (OneOf a) where
+  cempty = OneOf Nothing
+
 -- Numbers
 instance Num a => Commutative (Sum a) where
   commute (Sum x) (Sum y) = Sum $ x + y
