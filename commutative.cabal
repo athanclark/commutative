@@ -29,6 +29,9 @@ Test-Suite spec
                       , test
   Ghc-Options:          -Wall
   Main-Is:              Main.hs
+  Other-Modules:        Data.Commutative
+                        Data.CommutativeSpec
+                        Data.Mergeable
   Build-Depends:        base
                       , tasty
                       , tasty-quickcheck
