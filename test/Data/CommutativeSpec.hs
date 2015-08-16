@@ -1,7 +1,10 @@
 module Data.CommutativeSpec (spec) where
 
 import Data.Commutative
+import Data.Mergeable
 import Data.Monoid
+import Data.Maybe (isJust)
+import Data.List (permutations)
 
 import Test.Tasty
 import Test.Tasty.QuickCheck as QC
@@ -27,6 +30,8 @@ spec =
     , QC.testProperty "`Sum`      should have id" (lridentity :: Sum Int -> Bool)
     , QC.testProperty "`Product`  should have id" (lridentity :: Product Int -> Bool)
     ]
+  , testGroup "Mergeable"
+    [ QC.testProperty "Lists should merge" (merges :: Under10 (Sum Int) -> Bool )]
   ]
 
 commutes :: (Eq a, Commutative a) => a -> a -> Bool
@@ -35,6 +40,18 @@ commutes x y = x <~> y == y <~> x
 lridentity :: (Eq a, CommutativeId a) => a -> Bool
 lridentity x = x <~> cempty == x
             && cempty <~> x == x
+
+merges :: (Eq a, CommutativeId a) => Under10 a -> Bool
+merges (Under10 xs) = let merge' = merge (<~>) cempty
+                      in equal $ map merge' $ permutations xs
+
+-----------------------------
+
+newtype Under10 a = Under10 {unUnder10 :: [a]}
+  deriving (Show, Eq)
+
+instance Arbitrary a => Arbitrary (Under10 a) where
+  arbitrary = Under10 <$> arbitrary `suchThat` (\x -> length x < 10)
 
 instance Arbitrary Any where
   arbitrary = Any <$> arbitrary
@@ -50,3 +67,8 @@ instance Arbitrary a => Arbitrary (Sum a) where
 
 instance Arbitrary a => Arbitrary (Product a) where
   arbitrary = Product <$> arbitrary
+
+equal :: (Eq a, Foldable f) => f a -> Bool
+equal = maybe True snd
+      . foldr (\a mb -> Just $ maybe (a, True)
+                  (\(b, p) -> (b, p && (a == b))) mb) Nothing
