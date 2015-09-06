@@ -5,6 +5,7 @@ import Data.Mergeable
 import Data.Monoid
 import Data.Maybe (isJust)
 import Data.List (permutations)
+import Control.Applicative
 
 import Test.Tasty
 import Test.Tasty.QuickCheck as QC
