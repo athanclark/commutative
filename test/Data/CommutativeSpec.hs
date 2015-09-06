@@ -54,7 +54,7 @@ newtype Under10 a = Under10 {unUnder10 :: [a]}
   deriving (Show, Eq)
 
 instance Arbitrary a => Arbitrary (Under10 a) where
-  arbitrary = Under10 <$> arbitrary `suchThat` (\x -> length x < 10)
+  arbitrary = Under10 <$> arbitrary `suchThat` (\x -> length x < 5)
 
 instance Arbitrary Any where
   arbitrary = Any <$> arbitrary
