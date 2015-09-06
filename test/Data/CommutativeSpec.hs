@@ -1,5 +1,6 @@
 module Data.CommutativeSpec (spec) where
 
+import Prelude hiding (foldr)
 import Data.Commutative
 import Data.Monoid
 import Data.Mergeable
