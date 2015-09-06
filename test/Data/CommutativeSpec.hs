@@ -34,7 +34,7 @@ spec =
     , QC.testProperty "`Product`  should have id" (lridentity :: Product Int -> Bool)
     ]
   , testGroup "Mergeable"
-    [ QC.testProperty "Lists should merge" (merges :: Under10 (Sum Int) -> Bool )]
+    [ QC.testProperty "Lists should merge" (merges :: Under5 (Sum Int) -> Bool )]
   ]
 
 commutes :: (Eq a, Commutative a) => a -> a -> Bool
@@ -44,17 +44,17 @@ lridentity :: (Eq a, CommutativeId a) => a -> Bool
 lridentity x = x <~> cempty == x
             && cempty <~> x == x
 
-merges :: (Eq a, CommutativeId a) => Under10 a -> Bool
-merges (Under10 xs) = let merge' = merge (<~>) cempty
+merges :: (Eq a, CommutativeId a) => Under5 a -> Bool
+merges (Under5 xs) = let merge' = merge (<~>) cempty
                       in equal $ map merge' $ permutations xs
 
 -----------------------------
 
-newtype Under10 a = Under10 {unUnder10 :: [a]}
+newtype Under5 a = Under5 {unUnder5 :: [a]}
   deriving (Show, Eq)
 
-instance Arbitrary a => Arbitrary (Under10 a) where
-  arbitrary = Under10 <$> arbitrary `suchThat` (\x -> length x < 5)
+instance Arbitrary a => Arbitrary (Under5 a) where
+  arbitrary = Under5 <$> arbitrary `suchThat` (\x -> length x < 5)
 
 instance Arbitrary Any where
   arbitrary = Any <$> arbitrary
