@@ -4,7 +4,15 @@
 
 module Data.Commutative where
 
-import Data.Monoid (Any (..), All (..), First (..), Last (..), Sum (..), Product (..))
+import Data.Monoid ( Any (..)
+                   , All (..)
+                   , First (..)
+                   , Last (..)
+                   , Sum (..)
+                   , Product (..)
+                   , mappend
+                   )
+import Control.Applicative
 import System.IO.Unsafe (unsafePerformIO)
 import System.Random (randomIO)
 
