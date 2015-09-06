@@ -1,8 +1,9 @@
 module Data.CommutativeSpec (spec) where
 
 import Data.Commutative
-import Data.Mergeable
 import Data.Monoid
+import Data.Mergeable
+import Data.Foldable
 import Data.Maybe (isJust)
 import Data.List (permutations)
 import Control.Applicative
