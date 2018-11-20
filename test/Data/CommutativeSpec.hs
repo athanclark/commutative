@@ -56,20 +56,20 @@ newtype Under5 a = Under5 {unUnder5 :: [a]}
 instance Arbitrary a => Arbitrary (Under5 a) where
   arbitrary = Under5 <$> arbitrary `suchThat` (\x -> length x < 5)
 
-instance Arbitrary Any where
-  arbitrary = Any <$> arbitrary
+-- instance Arbitrary Any where
+--   arbitrary = Any <$> arbitrary
 
-instance Arbitrary All where
-  arbitrary = All <$> arbitrary
+-- instance Arbitrary All where
+--   arbitrary = All <$> arbitrary
 
 instance Arbitrary a => Arbitrary (OneOf a) where
   arbitrary = OneOf <$> arbitrary
 
-instance Arbitrary a => Arbitrary (Sum a) where
-  arbitrary = Sum <$> arbitrary
+-- instance Arbitrary a => Arbitrary (Sum a) where
+--   arbitrary = Sum <$> arbitrary
 
-instance Arbitrary a => Arbitrary (Product a) where
-  arbitrary = Product <$> arbitrary
+-- instance Arbitrary a => Arbitrary (Product a) where
+--   arbitrary = Product <$> arbitrary
 
 equal :: (Eq a, Foldable f) => f a -> Bool
 equal = maybe True snd

@@ -15,6 +15,7 @@ import Data.Monoid ( Any (..)
 import Control.Applicative
 import System.IO.Unsafe (unsafePerformIO)
 import System.Random (randomIO)
+import qualified Data.Vector as Vector
 
 
 class Commutative a where

@@ -7,6 +7,7 @@ module Data.Mergeable where
 
 import Data.Commutative
 import Data.List.NonEmpty as NE
+import qualified Data.Vector as Vector
 
 
 class Mergeable t where
@@ -19,6 +20,11 @@ class Mergeable t where
 instance Mergeable [] where
   mergeMap _ [] = cempty
   mergeMap f (x:xs) = f x <~> mergeMap f xs
+
+instance Mergeable Vector.Vector where
+  mergeMap f xss
+    | Vector.null xss = cempty
+    | otherwise = f (Vector.head xss) <~> mergeMap f (Vector.drop 1 xss)
 
 
 class Functor t => Mergeable1 t where
